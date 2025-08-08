@@ -7,8 +7,8 @@ int main()
 
     InitWindow(windowWidth, windowHeight, "Dasher");
 
-    // acceleration due to gravity (pixels/frame)/frame
-    const int gravity{1};
+    // acceleration due to gravity (pixels/sec)/sec
+    const int gravity{2'500};
 
     // special compound variable Texture2D by raylib to save textures in variables.
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
@@ -22,7 +22,8 @@ int main()
     scarfyPos.x = (windowWidth / 3) - (scarfyRec.width / 2);
     scarfyPos.y = (windowHeight - scarfyRec.height);
 
-    const int jumpVel{-25};
+    // jump velocity (pixels/sec)
+    const int jumpVel{-600};
 
     // int posY{windowHeight - scarfyRec.height};
     int velocity{0};
@@ -35,6 +36,9 @@ int main()
         BeginDrawing();
         ClearBackground(SKYBLUE);
 
+        // delta time (time since last frame)
+        const float dt{GetFrameTime()};
+
         // performing ground check
         if (scarfyPos.y >= (windowHeight - scarfyRec.height))
         {
@@ -45,7 +49,7 @@ int main()
         {
             // scarfy is in the air
             //  apply gravity
-            velocity += gravity;
+            velocity += gravity * dt;
         }
 
         if (IsKeyPressed(KEY_SPACE) && (scarfyPos.y >= (0 + scarfyRec.height))) // stops scarfy from escaping the upper bounds
@@ -54,7 +58,7 @@ int main()
         };
 
         // updating position
-        scarfyPos.y += velocity;
+        scarfyPos.y += velocity * dt;
 
         DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
