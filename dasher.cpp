@@ -9,6 +9,31 @@ struct AnimData
     float RunningTime;
 };
 
+// func to check if scarfy is on ground
+bool isOnGround(AnimData data, int windowHeight)
+{
+    return data.pos.y >= windowHeight - data.rec.height;
+}
+
+// func for updating scarfys animation frame
+AnimData updateAnimData(AnimData data, float deltaTime, int maxFrame)
+{
+    // update running time
+    data.RunningTime += deltaTime;
+    if (data.RunningTime >= data.updateTime)
+    {
+        data.RunningTime = 0.0;
+        // update animation frame
+        data.rec.x = data.frame * data.rec.width;
+        data.frame++;
+        if (data.frame > maxFrame)
+        {
+            data.frame = 0;
+        }
+    }
+    return data;
+}
+
 int main()
 {
     // window dimensions
@@ -34,7 +59,7 @@ int main()
         nebulae[i].rec.x = 0.0;
         nebulae[i].rec.y = 0.0;
         nebulae[i].rec.width = (nebula.width / 8.0);
-        nebulae[i].rec.height = (nebula.width / 8.0);
+        nebulae[i].rec.height = (nebula.height / 8.0);
         nebulae[i].frame = 0;
         nebulae[i].updateTime = (1.0 / 16.0);
         nebulae[i].RunningTime = 0.0;
@@ -71,19 +96,34 @@ int main()
     // is scarfy in air
     bool isInAir{};
 
+    Texture2D background = LoadTexture("textures/far-buildings.png");
+    float bgX{0};
+
     SetTargetFPS(180);
 
     while (!WindowShouldClose())
     {
+        // delta time (time since last frame)
+        const float dT{GetFrameTime()};
+
         // start Drawing
         BeginDrawing();
         ClearBackground(SKYBLUE);
 
-        // delta time (time since last frame)
-        const float dT{GetFrameTime()};
+        bgX -= 20 * dT;
+        if (bgX <= -background.width * 2)
+        {
+            bgX = 0.0;
+        }
+
+        // draw the background
+        Vector2 bg1Pos{bgX, 0.0};
+        DrawTextureEx(background, bg1Pos, 0.0, 4.8, WHITE);
+        Vector2 bg2Pos{bgX + background.width * 2, 0.0};
+        DrawTextureEx(background, bg2Pos, 0.0, 4.8, WHITE);
 
         // performing ground check
-        if (scarfyData.pos.y >= (windowDimensions[1] - scarfyData.rec.height))
+        if (isOnGround(scarfyData, windowDimensions[1]))
         {
             isInAir = false;
             // scarfy is on the ground
@@ -111,47 +151,22 @@ int main()
         // updating scarfy position
         scarfyData.pos.y += velocity * dT;
 
+        // updating scarfys animation frame
         if (!isInAir)
         {
             // updating the running time
-            scarfyData.RunningTime += dT;
-            if (scarfyData.RunningTime >= scarfyData.updateTime)
-            {
-                scarfyData.RunningTime = 0.0;
-                // update animation frame
-                scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
-
-                scarfyData.frame++;
-
-                if (scarfyData.frame > 5)
-                {
-                    scarfyData.frame = 0;
-                }
-            }
+            scarfyData = updateAnimData(scarfyData, dT, 5);
         }
 
         for (int i = 0; i < sizeOfNebulae; i++)
         {
-            nebulae[i].RunningTime += dT;
-            if (nebulae[i].RunningTime >= nebulae[i].updateTime)
-            {
-                nebulae[i].RunningTime = 0.0;
-                // updating animation frame for nebula
-                nebulae[i].rec.x = nebulae[i].frame * nebulae[i].rec.width;
-
-                nebulae[i].frame++;
-
-                if (nebulae[i].frame > 7)
-                {
-                    nebulae[i].frame = 0;
-                }
-            }
+            nebulae[i] = updateAnimData(nebulae[i], dT, 7);
         }
 
         for (int i = 0; i < sizeOfNebulae; i++)
         {
             // Draw nebulaOne
-            DrawTextureRec(nebula, nebulae[i].rec, nebulae[i].pos, RED);
+            DrawTextureRec(nebula, nebulae[i].rec, nebulae[i].pos, WHITE);
         }
 
         // Draw scarfy
@@ -162,5 +177,7 @@ int main()
     }
     UnloadTexture(scarfy);
     UnloadTexture(nebula);
+    UnloadTexture(background);
+
     CloseWindow();
 };
