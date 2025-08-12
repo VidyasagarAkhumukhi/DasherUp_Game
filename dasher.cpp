@@ -51,9 +51,33 @@ int main()
     // AnimData for nebula using array .
 
     // number of nebulae and its positions
-    const int sizeOfNebulae{10};
+    // const int sizeOfNebulae{10};
+    // AnimData nebulae[sizeOfNebulae]{};
+
+    // nebulas at ground level
+    // for (int i = 0; i < sizeOfNebulae; i++)
+    // {
+    //     nebulae[i].rec.x = 0.0;
+    //     nebulae[i].rec.y = 0.0;
+    //     nebulae[i].rec.width = (nebula.width / 8.0);
+    //     nebulae[i].rec.height = (nebula.height / 8.0);
+    //     nebulae[i].frame = 0;
+    //     nebulae[i].updateTime = (1.0 / 16.0);
+    //     nebulae[i].RunningTime = 0.0;
+    //     nebulae[i].pos.x = windowDimensions[0] + i * 300;
+
+    //     // int positionY{i};
+    //     // the positions are different for the nebulas
+    //     nebulae[i].pos.y = windowDimensions[1] - ((nebula.height / 8)); // * (1 + positionY) for increasing the height gradually
+    //     // positionY += 1;
+
+    // }
+
+    // number of nebulae and its positions
+    const int sizeOfNebulae{30};
     AnimData nebulae[sizeOfNebulae]{};
 
+    // nebulas with alternating positions, middle and bottom
     for (int i = 0; i < sizeOfNebulae; i++)
     {
         nebulae[i].rec.x = 0.0;
@@ -63,12 +87,19 @@ int main()
         nebulae[i].frame = 0;
         nebulae[i].updateTime = (1.0 / 16.0);
         nebulae[i].RunningTime = 0.0;
-        nebulae[i].pos.x = windowDimensions[0] + i * 300;
+        nebulae[i].pos.x = windowDimensions[0] + i * 200; // spacing between nebulas
 
-        // int positionY{i};
-        // the positions are different for the nebulas
-        nebulae[i].pos.y = windowDimensions[1] - ((nebula.height / 8)); // * (1 + positionY) for increasing the height gradually
-        // positionY += 1;
+        // Use the modulo operator to set two different Y-positions
+        if (i % 2 == 0)
+        {
+            // EVEN nebulas (0, 2, 4...) go to the bottom
+            nebulae[i].pos.y = windowDimensions[1] - nebulae[i].rec.height;
+        }
+        else
+        {
+            // ODD nebulas (1, 3, 5...) go to the middle
+            nebulae[i].pos.y = windowDimensions[1] / 2.0 - nebulae[i].rec.height / 2.0;
+        }
     }
 
     float finishLine{nebulae[sizeOfNebulae - 1].pos.x};
