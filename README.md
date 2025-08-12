@@ -2,7 +2,9 @@
 
 Dasher is a fast-paced 2D side-scrolling runner built with C++ and the Raylib library. The game features a player character, "Scarfy," who must run and jump to navigate a challenging course of oncoming obstacles to reach the finish line. This project showcases several key game development concepts, including sprite animation, parallax scrolling, and procedural level generation.
 
-![gameplay_screenshot](https://i.imgur.com/8Qe8L67.png)
+![gameplay](<img src="textures/Dasher.gif" width="50%" height="50%"/>)
+
+<img src="textures/Dasher.gif" width="50%" height="50%"/>
 
 ## 🎮 Gameplay & Controls
 
