@@ -6,7 +6,6 @@ Dasher is a fast-paced 2D side-scrolling runner built with C++ and the Raylib li
 
 <img src="textures/Dasher.gif" width="50%" height="50%"/>
 
-> > > > > > > 0249d9b675657597e2ae19ac76b063e3b5109bb3
 
 ## 🎮 Gameplay & Controls
 
